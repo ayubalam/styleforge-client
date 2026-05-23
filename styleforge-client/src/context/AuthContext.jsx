@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { AuthContext } from "./authContext";
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(() => {
 
@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  // Login
   const login = (userData) => {
 
     setUser(userData);
@@ -22,7 +21,6 @@ export const AuthProvider = ({ children }) => {
     );
   };
 
-  // Logout
   const logout = () => {
 
     setUser(null);
@@ -31,7 +29,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-
     <AuthContext.Provider
       value={{
         user,
@@ -45,3 +42,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export default AuthProvider;

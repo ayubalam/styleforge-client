@@ -1,20 +1,90 @@
 import MainLayout from "../layouts/MainLayout";
+import ProductCard from "../components/ProductCard";
 
 const Home = () => {
   return (
     <MainLayout>
 
-      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-gray-100">
+      {/* Hero Section */}
+      <section className="bg-gray-100 min-h-[90vh] flex items-center">
 
-        <h1 className="text-5xl font-bold mb-4">
-          STYLEFORGE
-        </h1>
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
 
-        <p className="text-xl text-gray-600">
-          Premium Men's Fashion Store
-        </p>
+          {/* Left Content */}
+          <div>
 
-      </div>
+            <p className="text-gray-600 uppercase tracking-widest mb-3">
+              Premium Collection
+            </p>
+
+            <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
+              Modern Fashion <br />
+              For Men
+            </h1>
+
+            <p className="text-gray-600 text-lg mb-8">
+              Discover premium quality outfits designed for modern men.
+              Elevate your style with STYLEFORGE.
+            </p>
+
+            <div className="flex gap-4">
+
+              <button className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">
+                Shop Now
+              </button>
+
+              <button className="border border-black px-6 py-3 rounded-lg hover:bg-black hover:text-white transition">
+                Explore
+              </button>
+
+            </div>
+
+          </div>
+
+          {/* Right Image */}
+          <div className="flex justify-center">
+
+            <img
+              src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f"
+              alt="Fashion"
+              className="rounded-2xl shadow-xl h-[600px] w-full object-cover"
+            />
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* Featured Products Section */}
+      <section className="py-20 bg-white">
+
+        <div className="max-w-7xl mx-auto px-6">
+
+          <div className="text-center mb-14">
+
+            <h2 className="text-4xl font-bold mb-4">
+              Featured Products
+            </h2>
+
+            <p className="text-gray-600">
+              Explore our latest men's fashion collection
+            </p>
+
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+            <ProductCard />
+            <ProductCard />
+            <ProductCard />
+            <ProductCard />
+
+          </div>
+
+        </div>
+
+      </section>
 
     </MainLayout>
   );

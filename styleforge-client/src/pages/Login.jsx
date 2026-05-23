@@ -1,7 +1,29 @@
 import MainLayout from "../layouts/MainLayout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
+
+  const navigate = useNavigate();
+
+  const { login } = useAuth();
+
+  const handleLogin = (e) => {
+
+    e.preventDefault();
+
+    // Temporary fake admin login
+    const fakeUser = {
+      name: "Admin User",
+      email: "admin@gmail.com",
+      role: "admin",
+    };
+
+    login(fakeUser);
+
+    navigate("/admin");
+  };
+
   return (
     <MainLayout>
 
@@ -31,7 +53,10 @@ const Login = () => {
               Login to your STYLEFORGE account
             </p>
 
-            <form className="space-y-6">
+            <form
+              onSubmit={handleLogin}
+              className="space-y-6"
+            >
 
               <div>
 
@@ -62,6 +87,7 @@ const Login = () => {
               </div>
 
               <button
+                type="submit"
                 className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
               >
                 Login

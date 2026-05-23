@@ -1,8 +1,12 @@
+import MainLayout from "../layouts/MainLayout";
+
 const Products = () => {
   return (
-    <div className="text-3xl font-bold p-10">
-      Products Page
-    </div>
+    <MainLayout>
+      <div className="p-10 text-3xl font-bold">
+        Products Page
+      </div>
+    </MainLayout>
   );
 };
 

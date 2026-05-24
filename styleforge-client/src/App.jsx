@@ -48,6 +48,12 @@ import EditProduct
 import ProtectedRoute
   from "./components/ProtectedRoute";
 
+  import PaymentSuccess
+  from "./pages/PaymentSuccess";
+
+import PaymentFailed
+  from "./pages/PaymentFailed";
+
 function App() {
 
   return (
@@ -138,8 +144,19 @@ function App() {
           <ProtectedRoute adminOnly={true}>
             <EditProduct />
           </ProtectedRoute>
+
         }
       />
+
+      <Route
+  path="/payment-success"
+  element={<PaymentSuccess />}
+/>
+
+<Route
+  path="/payment-failed"
+  element={<PaymentFailed />}
+/>
 
     </Routes>
   );

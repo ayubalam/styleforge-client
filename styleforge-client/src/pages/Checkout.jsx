@@ -36,6 +36,9 @@ const Checkout = () => {
       country: "",
     });
 
+  const [loading, setLoading] =
+    useState(false);
+
   // Total Price
   const totalPrice =
     cartItems.reduce(
@@ -57,85 +60,135 @@ const Checkout = () => {
       });
     };
 
-  // Place Order
+  // Handle Payment + Order
   const handleSubmit =
-  async (e) => {
+    async (e) => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    try {
+      try {
 
-      // Create Razorpay Order
-      const { data } =
-        await API.post(
-          "/payment/create-order",
-          {
-            amount:
-              totalPrice,
-          }
-        );
+        setLoading(true);
 
-      const options = {
-
-        key:
-          "YOUR_RAZORPAY_KEY_ID",
-
-        amount:
-          data.amount,
-
-        currency:
-          data.currency,
-
-        name:
-          "STYLEFORGE",
-
-        description:
-          "Order Payment",
-
-        order_id:
-          data.id,
-
-        handler:
-          async function () {
-
-            // Save Order
-            await API.post(
-              "/orders",
-              {
-                orderItems:
-                  cartItems,
-
-                shippingAddress,
-
+        // Create Razorpay Order
+        const { data } =
+          await API.post(
+            "/payment/create-order",
+            {
+              amount:
                 totalPrice,
+            }
+          );
+
+        const options = {
+
+          // Replace With Your Real Razorpay Key
+          key:
+            "YOUR_RAZORPAY_KEY_ID",
+
+          amount:
+            data.amount,
+
+          currency:
+            data.currency,
+
+          name:
+            "STYLEFORGE",
+
+          description:
+            "Premium Fashion Order",
+
+          order_id:
+            data.id,
+
+          // Payment Success
+          handler:
+            async function (
+              response
+            ) {
+
+              try {
+
+                // Save Order
+                await API.post(
+                  "/orders",
+                  {
+                    orderItems:
+                      cartItems,
+
+                    shippingAddress,
+
+                    totalPrice,
+
+                    paymentResult: {
+                      razorpayPaymentId:
+                        response.razorpay_payment_id,
+                    },
+                  }
+                );
+
+                // Clear Cart
+                clearCart();
+
+                // Redirect
+                navigate(
+                  "/payment-success"
+                );
+
+              } catch (error) {
+
+                console.log(error);
+
+                navigate(
+                  "/payment-failed"
+                );
               }
-            );
+            },
 
-            clearCart();
+          // Popup Closed
+          modal: {
 
-            navigate(
-              "/dashboard"
-            );
+            ondismiss:
+              function () {
+
+                navigate(
+                  "/payment-failed"
+                );
+              },
           },
 
-        theme: {
-          color:
-            "#000000",
-        },
-      };
+          prefill: {
 
-      const razor =
-        new window.Razorpay(
-          options
+            name:
+              shippingAddress.fullName,
+          },
+
+          theme: {
+            color:
+              "#000000",
+          },
+        };
+
+        const razorpay =
+          new window.Razorpay(
+            options
+          );
+
+        razorpay.open();
+
+      } catch (error) {
+
+        console.log(error);
+
+        navigate(
+          "/payment-failed"
         );
 
-      razor.open();
+      } finally {
 
-    } catch (error) {
-
-      console.log(error);
-    }
-  };
+        setLoading(false);
+      }
+    };
 
   return (
 
@@ -159,57 +212,66 @@ const Checkout = () => {
               className="space-y-6"
             >
 
+              {/* Full Name */}
               <input
                 type="text"
                 name="fullName"
                 placeholder="Full Name"
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none"
+                className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black"
                 required
               />
 
+              {/* Address */}
               <input
                 type="text"
                 name="address"
                 placeholder="Address"
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none"
+                className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black"
                 required
               />
 
+              {/* City */}
               <input
                 type="text"
                 name="city"
                 placeholder="City"
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none"
+                className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black"
                 required
               />
 
+              {/* Postal Code */}
               <input
                 type="text"
                 name="postalCode"
                 placeholder="Postal Code"
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none"
+                className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black"
                 required
               />
 
+              {/* Country */}
               <input
                 type="text"
                 name="country"
                 placeholder="Country"
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none"
+                className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black"
                 required
               />
 
+              {/* Button */}
               <button
                 type="submit"
-                className="bg-black text-white px-8 py-4 rounded-2xl hover:bg-gray-800 transition w-full"
+                disabled={loading}
+                className="bg-black text-white px-8 py-4 rounded-2xl hover:bg-gray-800 transition w-full text-lg"
               >
 
-                Place Order
+                {loading
+                  ? "Processing..."
+                  : `Pay $${totalPrice}`}
 
               </button>
 
@@ -236,15 +298,17 @@ const Checkout = () => {
                     className="flex items-center gap-5"
                   >
 
+                    {/* Image */}
                     <img
                       src={item.image}
                       alt={item.title}
                       className="w-24 h-24 object-cover rounded-2xl"
                     />
 
+                    {/* Info */}
                     <div className="flex-1">
 
-                      <h3 className="font-bold">
+                      <h3 className="font-bold text-lg">
 
                         {item.title}
 
@@ -260,7 +324,8 @@ const Checkout = () => {
 
                     </div>
 
-                    <p className="font-bold">
+                    {/* Price */}
+                    <p className="font-bold text-lg">
 
                       $
                       {item.price *

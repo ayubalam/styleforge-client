@@ -1,8 +1,13 @@
+import {
+  Link,
+} from "react-router-dom";
+
 import MainLayout
   from "../layouts/MainLayout";
 
-import { useCart }
-  from "../hooks/useCart";
+import {
+  useCart,
+} from "../hooks/useCart";
 
 const Cart = () => {
 
@@ -11,11 +16,13 @@ const Cart = () => {
     removeFromCart,
   } = useCart();
 
-  // Total Price
+  // Total
   const totalPrice =
     cartItems.reduce(
       (acc, item) =>
-        acc + item.price * item.qty,
+        acc +
+        item.price *
+        item.qty,
       0
     );
 
@@ -23,101 +30,178 @@ const Cart = () => {
 
     <MainLayout>
 
-      <div className="max-w-7xl mx-auto px-6 py-20">
+      <section className="max-w-7xl mx-auto px-6 py-20">
 
-        <h1 className="text-5xl font-bold mb-10">
-          Shopping Cart
-        </h1>
+        {/* Heading */}
+        <div className="mb-14">
 
+          <h1 className="text-5xl font-black mb-4">
+
+            Shopping Cart
+
+          </h1>
+
+          <p className="text-gray-500 text-lg">
+
+            Review your selected products.
+
+          </p>
+
+        </div>
+
+        {/* Empty */}
         {cartItems.length === 0 ? (
 
-          <p>Your cart is empty.</p>
+          <div className="text-center py-20">
+
+            <h2 className="text-4xl font-bold mb-6">
+
+              Your Cart Is Empty
+
+            </h2>
+
+            <Link
+              to="/products"
+              className="bg-black text-white px-8 py-4 rounded-2xl"
+            >
+
+              Continue Shopping
+
+            </Link>
+
+          </div>
 
         ) : (
 
-          <div className="space-y-6">
+          <div className="grid lg:grid-cols-3 gap-12">
 
-            {cartItems.map((item) => (
+            {/* Cart Items */}
+            <div className="lg:col-span-2 space-y-8">
 
-              <div
-                key={item._id}
-                className="flex items-center justify-between bg-white shadow-md rounded-xl p-5"
-              >
+              {cartItems.map(
+                (item) => (
 
-                {/* Left */}
-                <div className="flex items-center gap-5">
+                  <div
+                    key={item._id}
+                    className="bg-white rounded-3xl shadow-md p-6 flex flex-col md:flex-row gap-6"
+                  >
 
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-28 h-28 object-cover rounded-lg"
-                  />
+                    {/* Image */}
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full md:w-40 h-40 object-cover rounded-2xl"
+                    />
 
-                  <div>
+                    {/* Content */}
+                    <div className="flex-1">
 
-                    <h2 className="text-2xl font-bold">
+                      <h2 className="text-2xl font-bold mb-3">
 
-                      {item.title}
+                        {item.title}
 
-                    </h2>
+                      </h2>
 
-                    <p className="text-gray-500">
+                      <p className="text-gray-500 mb-3">
 
-                      Qty:
-                      {" "}
-                      {item.qty}
+                        Quantity:
+                        {" "}
+                        {item.qty}
 
-                    </p>
+                      </p>
+
+                      <p className="text-2xl font-bold">
+
+                        $
+                        {item.price}
+
+                      </p>
+
+                    </div>
+
+                    {/* Remove */}
+                    <button
+                      onClick={() =>
+                        removeFromCart(
+                          item._id
+                        )
+                      }
+                      className="bg-red-500 text-white px-5 py-3 rounded-2xl hover:bg-red-600 transition h-fit"
+                    >
+
+                      Remove
+
+                    </button>
 
                   </div>
+                )
+              )}
+
+            </div>
+
+            {/* Summary */}
+            <div className="bg-white shadow-lg rounded-3xl p-8 h-fit">
+
+              <h2 className="text-3xl font-bold mb-8">
+
+                Order Summary
+
+              </h2>
+
+              <div className="space-y-5">
+
+                <div className="flex justify-between">
+
+                  <span>
+                    Total Items
+                  </span>
+
+                  <span>
+                    {cartItems.length}
+                  </span>
 
                 </div>
 
-                {/* Right */}
-                <div className="text-right">
+                <div className="flex justify-between">
 
-                  <p className="text-2xl font-bold mb-4">
+                  <span>
+                    Shipping
+                  </span>
 
-                    $
-                    {item.price * item.qty}
+                  <span>
+                    Free
+                  </span>
 
-                  </p>
+                </div>
 
-                  <button
-                    onClick={() =>
-                      removeFromCart(
-                        item._id
-                      )
-                    }
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-                  >
+                <div className="border-t pt-5 flex justify-between text-2xl font-bold">
 
-                    Remove
+                  <span>Total</span>
 
-                  </button>
+                  <span>
+                    ${totalPrice}
+                  </span>
 
                 </div>
 
               </div>
-            ))}
 
-            {/* Total */}
-            <div className="text-right mt-10">
+              {/* Checkout */}
+              <Link
+                to="/checkout"
+                className="bg-black text-white w-full py-4 rounded-2xl mt-10 block text-center hover:bg-gray-800 transition"
+              >
 
-              <h2 className="text-4xl font-bold">
+                Proceed To Checkout
 
-                Total:
-                {" "}
-                ${totalPrice}
-
-              </h2>
+              </Link>
 
             </div>
 
           </div>
         )}
 
-      </div>
+      </section>
 
     </MainLayout>
   );

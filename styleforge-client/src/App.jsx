@@ -3,14 +3,10 @@ import {
   Route,
 } from "react-router-dom";
 
+
+// Pages
 import Home
   from "./pages/Home";
-
-import Login
-  from "./pages/Login";
-
-import Register
-  from "./pages/Register";
 
 import Products
   from "./pages/Products";
@@ -21,12 +17,20 @@ import ProductDetails
 import Cart
   from "./pages/Cart";
 
-import NotFound
-  from "./pages/NotFound";
+import Login
+  from "./pages/Login";
 
-import ProtectedRoute
-  from "./components/ProtectedRoute";
+import Register
+  from "./pages/Register";
 
+import Dashboard
+  from "./pages/Dashboard";
+
+import Checkout
+  from "./pages/Checkout";
+
+
+// Admin
 import AdminDashboard
   from "./admin/AdminDashboard";
 
@@ -39,6 +43,11 @@ import AddProduct
 import EditProduct
   from "./admin/EditProduct";
 
+
+// Protected
+import ProtectedRoute
+  from "./components/ProtectedRoute";
+
 function App() {
 
   return (
@@ -49,16 +58,6 @@ function App() {
       <Route
         path="/"
         element={<Home />}
-      />
-
-      <Route
-        path="/login"
-        element={<Login />}
-      />
-
-      <Route
-        path="/register"
-        element={<Register />}
       />
 
       <Route
@@ -76,11 +75,40 @@ function App() {
         element={<Cart />}
       />
 
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+      <Route
+        path="/register"
+        element={<Register />}
+      />
+
+      {/* Protected User */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        }
+      />
+
       {/* Admin */}
       <Route
         path="/admin"
         element={
-          <ProtectedRoute role="admin">
+          <ProtectedRoute adminOnly={true}>
             <AdminDashboard />
           </ProtectedRoute>
         }
@@ -89,7 +117,7 @@ function App() {
       <Route
         path="/admin/products"
         element={
-          <ProtectedRoute role="admin">
+          <ProtectedRoute adminOnly={true}>
             <AdminProducts />
           </ProtectedRoute>
         }
@@ -98,7 +126,7 @@ function App() {
       <Route
         path="/admin/add-product"
         element={
-          <ProtectedRoute role="admin">
+          <ProtectedRoute adminOnly={true}>
             <AddProduct />
           </ProtectedRoute>
         }
@@ -107,16 +135,10 @@ function App() {
       <Route
         path="/admin/edit-product/:id"
         element={
-          <ProtectedRoute role="admin">
+          <ProtectedRoute adminOnly={true}>
             <EditProduct />
           </ProtectedRoute>
         }
-      />
-
-      {/* 404 */}
-      <Route
-        path="*"
-        element={<NotFound />}
       />
 
     </Routes>

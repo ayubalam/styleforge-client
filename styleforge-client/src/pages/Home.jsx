@@ -1,8 +1,40 @@
+import { useEffect, useState } from "react";
+
 import MainLayout from "../layouts/MainLayout";
+
 import ProductCard from "../components/ProductCard";
 
+import API from "../services/api";
+
 const Home = () => {
+
+  const [products, setProducts] =
+    useState([]);
+
+  // Fetch Products
+  useEffect(() => {
+
+    const fetchProducts = async () => {
+
+      try {
+
+        const { data } =
+          await API.get("/products");
+
+        setProducts(data);
+
+      } catch (error) {
+
+        console.log(error);
+      }
+    };
+
+    fetchProducts();
+
+  }, []);
+
   return (
+
     <MainLayout>
 
       {/* Hero Section */}
@@ -10,7 +42,7 @@ const Home = () => {
 
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
 
-          {/* Left Content */}
+          {/* Left */}
           <div>
 
             <p className="text-gray-600 uppercase tracking-widest mb-3">
@@ -18,35 +50,43 @@ const Home = () => {
             </p>
 
             <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
+
               Modern Fashion <br />
+
               For Men
+
             </h1>
 
             <p className="text-gray-600 text-lg mb-8">
+
               Discover premium quality outfits designed for modern men.
-              Elevate your style with STYLEFORGE.
+
             </p>
 
             <div className="flex gap-4">
 
               <button className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">
+
                 Shop Now
+
               </button>
 
               <button className="border border-black px-6 py-3 rounded-lg hover:bg-black hover:text-white transition">
+
                 Explore
+
               </button>
 
             </div>
 
           </div>
 
-          {/* Right Image */}
+          {/* Right */}
           <div className="flex justify-center">
 
             <img
               src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f"
-              alt="Fashion"
+              alt="fashion"
               className="rounded-2xl shadow-xl h-[600px] w-full object-cover"
             />
 
@@ -56,7 +96,7 @@ const Home = () => {
 
       </section>
 
-      {/* Featured Products Section */}
+      {/* Products */}
       <section className="py-20 bg-white">
 
         <div className="max-w-7xl mx-auto px-6">
@@ -73,12 +113,16 @@ const Home = () => {
 
           </div>
 
+          {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+            {products.map((product) => (
+
+              <ProductCard
+                key={product._id}
+                product={product}
+              />
+            ))}
 
           </div>
 

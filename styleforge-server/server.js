@@ -6,6 +6,8 @@ import connectDB from "./config/db.js";
 
 import authRoutes from "./routes/authRoutes.js";
 
+import productRoutes from "./routes/productRoutes.js";
+
 dotenv.config();
 
 const app = express();
@@ -27,6 +29,11 @@ app.use(
   authRoutes
 );
 
+app.use(
+  "/api/products",
+  productRoutes
+);
+
 
 // Test Route
 app.get("/", (req, res) => {
@@ -38,7 +45,8 @@ app.get("/", (req, res) => {
 
 
 // PORT
-const PORT = process.env.PORT || 5000;
+const PORT =
+  process.env.PORT || 5000;
 
 app.listen(PORT, () => {
 

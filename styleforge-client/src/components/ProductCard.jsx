@@ -1,32 +1,47 @@
-const ProductCard = () => {
+import { Link } from "react-router-dom";
+
+const ProductCard = ({ product }) => {
+
   return (
+
     <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
 
+      {/* Image */}
       <img
-        src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518"
-        alt="product"
+        src={product.image}
+        alt={product.title}
         className="h-72 w-full object-cover"
       />
 
+      {/* Content */}
       <div className="p-5">
 
         <h2 className="text-2xl font-semibold mb-2">
-          Men's Jacket
+
+          {product.title}
+
         </h2>
 
         <p className="text-gray-500 mb-3">
-          Premium stylish jacket for men.
+
+          {product.description}
+
         </p>
 
         <div className="flex items-center justify-between">
 
           <span className="text-xl font-bold">
-            $120
+
+            ${product.price}
+
           </span>
 
-          <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition">
-            Add To Cart
-          </button>
+          <Link
+            to={`/product/${product._id}`}
+            className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
+          >
+            View
+          </Link>
 
         </div>
 

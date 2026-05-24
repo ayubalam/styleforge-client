@@ -3,6 +3,7 @@ import express from "express";
 import {
   createProduct,
   getProducts,
+  getSingleProduct,
 } from "../controllers/productController.js";
 
 const router = express.Router();
@@ -12,7 +13,11 @@ const router = express.Router();
 router.post("/", createProduct);
 
 
-// Get Products
+// Get All Products
 router.get("/", getProducts);
+
+
+// Get Single Product
+router.get("/:id", getSingleProduct);
 
 export default router;

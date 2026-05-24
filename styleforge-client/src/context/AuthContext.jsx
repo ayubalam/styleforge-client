@@ -1,18 +1,25 @@
-import { useState } from "react";
+import { useState }
+  from "react";
 
-import { AuthContext } from "./authContext";
+import { AuthContext }
+  from "./authContext";
 
-const AuthProvider = ({ children }) => {
+const AuthProvider = ({
+  children,
+}) => {
 
-  const [user, setUser] = useState(() => {
+  const [user, setUser] =
+    useState(() => {
 
-    const storedUser =
-      localStorage.getItem("user");
+      const storedUser =
+        localStorage.getItem(
+          "user"
+        );
 
-    return storedUser
-      ? JSON.parse(storedUser)
-      : null;
-  });
+      return storedUser
+        ? JSON.parse(storedUser)
+        : null;
+    });
 
   // Login
   const login = (userData) => {
@@ -30,7 +37,9 @@ const AuthProvider = ({ children }) => {
 
     setUser(null);
 
-    localStorage.removeItem("user");
+    localStorage.removeItem(
+      "user"
+    );
   };
 
   return (

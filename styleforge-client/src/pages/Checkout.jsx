@@ -84,7 +84,7 @@ const Checkout = () => {
 
           // Replace With Your Real Razorpay Key
           key:
-            "YOUR_RAZORPAY_KEY_ID",
+            "rzp_test_StINNKqp3pgL0x",
 
           amount:
             data.amount,

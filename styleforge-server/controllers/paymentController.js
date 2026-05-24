@@ -2,7 +2,7 @@ import razorpay
   from "../config/razorpay.js";
 
 
-// Create Razorpay Order
+// Create Payment Order
 export const createPayment =
   async (req, res) => {
 
@@ -12,25 +12,34 @@ export const createPayment =
         amount,
       } = req.body;
 
+      // Razorpay Options
       const options = {
 
         amount:
-          amount * 100,
+          Number(amount * 100),
 
-        currency: "INR",
+        currency:
+          "INR",
 
         receipt:
           `receipt_${Date.now()}`,
       };
 
+      // Create Order
       const order =
         await razorpay.orders.create(
           options
         );
 
-      res.json(order);
+      res.status(200).json(
+        order
+      );
 
     } catch (error) {
+
+      console.log(
+        error
+      );
 
       res.status(500).json({
         message:

@@ -1,14 +1,23 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar
+  from "../components/Navbar";
 
-const MainLayout = ({ children }) => {
+import Footer
+  from "../components/Footer";
+
+const MainLayout = ({
+  children,
+}) => {
+
   return (
-    <div className="min-h-screen flex flex-col">
+
+    <div className="min-h-screen bg-gray-50">
 
       <Navbar />
 
-      <main className="flex-grow">
+      <main>
+
         {children}
+
       </main>
 
       <Footer />

@@ -1,33 +1,56 @@
-import { useEffect, useState } from "react";
+import {
+  Link,
+} from "react-router-dom";
 
-import MainLayout from "../layouts/MainLayout";
+import {
+  useEffect,
+  useState,
+} from "react";
 
-import ProductCard from "../components/ProductCard";
+import MainLayout
+  from "../layouts/MainLayout";
 
-import API from "../services/api";
+import ProductCard
+  from "../components/ProductCard";
+
+import API
+  from "../services/api";
 
 const Home = () => {
 
   const [products, setProducts] =
     useState([]);
 
+  const [loading, setLoading] =
+    useState(true);
+
   // Fetch Products
   useEffect(() => {
 
-    const fetchProducts = async () => {
+    const fetchProducts =
+      async () => {
 
-      try {
+        try {
 
-        const { data } =
-          await API.get("/products");
+          const { data } =
+            await API.get(
+              "/products"
+            );
 
-        setProducts(data);
+          // Show only first 4 products
+          setProducts(
+            data.slice(0, 4)
+          );
 
-      } catch (error) {
+        } catch (error) {
 
-        console.log(error);
-      }
-    };
+          console.log(error);
+
+        } finally {
+
+          setLoading(false);
+        }
+      };
 
     fetchProducts();
 
@@ -38,56 +61,67 @@ const Home = () => {
     <MainLayout>
 
       {/* Hero Section */}
-      <section className="bg-gray-100 min-h-[90vh] flex items-center">
+      <section className="bg-gray-100">
 
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+        <div className="max-w-7xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-16 items-center">
 
           {/* Left */}
           <div>
 
-            <p className="text-gray-600 uppercase tracking-widest mb-3">
+            <p className="uppercase tracking-[6px] text-gray-500 mb-6">
+
               Premium Collection
+
             </p>
 
-            <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
+            <h1 className="text-6xl md:text-7xl font-black leading-tight mb-8">
 
-              Modern Fashion <br />
-
+              Modern Fashion
+              <br />
               For Men
 
             </h1>
 
-            <p className="text-gray-600 text-lg mb-8">
+            <p className="text-gray-600 text-xl leading-relaxed mb-10">
 
-              Discover premium quality outfits designed for modern men.
+              Discover premium quality outfits
+              designed for modern men.
+              Elevate your style with
+              STYLEFORGE.
 
             </p>
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-5">
 
-              <button className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">
+              <Link
+                to="/products"
+                className="bg-black text-white px-8 py-4 rounded-2xl hover:bg-gray-800 transition text-lg"
+              >
 
                 Shop Now
 
-              </button>
+              </Link>
 
-              <button className="border border-black px-6 py-3 rounded-lg hover:bg-black hover:text-white transition">
+              <Link
+                to="/products"
+                className="border border-black px-8 py-4 rounded-2xl hover:bg-black hover:text-white transition text-lg"
+              >
 
                 Explore
 
-              </button>
+              </Link>
 
             </div>
 
           </div>
 
           {/* Right */}
-          <div className="flex justify-center">
+          <div>
 
             <img
-              src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f"
+              src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop"
               alt="fashion"
-              className="rounded-2xl shadow-xl h-[600px] w-full object-cover"
+              className="rounded-3xl shadow-2xl w-full h-[700px] object-cover"
             />
 
           </div>
@@ -96,35 +130,119 @@ const Home = () => {
 
       </section>
 
-      {/* Products */}
-      <section className="py-20 bg-white">
+      {/* Featured Products */}
+      <section className="py-24">
 
         <div className="max-w-7xl mx-auto px-6">
 
-          <div className="text-center mb-14">
+          {/* Heading */}
+          <div className="text-center mb-20">
 
-            <h2 className="text-4xl font-bold mb-4">
+            <p className="uppercase tracking-[5px] text-gray-500 mb-4">
+
               Featured Products
+
+            </p>
+
+            <h2 className="text-5xl font-black mb-6">
+
+              Best Selling Collection
+
             </h2>
 
-            <p className="text-gray-600">
-              Explore our latest men's fashion collection
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+
+              Explore our premium men's fashion collection.
+
             </p>
 
           </div>
 
-          {/* Product Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Loading */}
+          {loading ? (
 
-            {products.map((product) => (
+            <div className="text-center py-20">
 
-              <ProductCard
-                key={product._id}
-                product={product}
-              />
-            ))}
+              <h2 className="text-3xl font-bold">
 
-          </div>
+                Loading Products...
+
+              </h2>
+
+            </div>
+
+          ) : (
+
+            <>
+              {/* Product Grid */}
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+
+                {products.map(
+                  (product) => (
+
+                    <ProductCard
+                      key={product._id}
+                      product={product}
+                    />
+                  )
+                )}
+
+              </div>
+
+              {/* View All */}
+              <div className="text-center mt-16">
+
+                <Link
+                  to="/products"
+                  className="bg-black text-white px-10 py-4 rounded-2xl hover:bg-gray-800 transition text-lg"
+                >
+
+                  View All Products
+
+                </Link>
+
+              </div>
+            </>
+          )}
+
+        </div>
+
+      </section>
+
+      {/* Banner */}
+      <section className="bg-black text-white py-24">
+
+        <div className="max-w-5xl mx-auto px-6 text-center">
+
+          <p className="uppercase tracking-[5px] text-gray-400 mb-6">
+
+            STYLEFORGE COLLECTION
+
+          </p>
+
+          <h2 className="text-5xl md:text-6xl font-black mb-8 leading-tight">
+
+            Elevate Your Style
+            <br />
+            With Premium Fashion
+
+          </h2>
+
+          <p className="text-gray-400 text-xl mb-10 leading-relaxed">
+
+            Fashion designed for confidence,
+            comfort, and luxury.
+
+          </p>
+
+          <Link
+            to="/products"
+            className="bg-white text-black px-10 py-4 rounded-2xl text-lg font-semibold hover:bg-gray-200 transition"
+          >
+
+            Explore Collection
+
+          </Link>
 
         </div>
 

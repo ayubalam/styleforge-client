@@ -1,115 +1,166 @@
-import { Link } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+} from "react-router-dom";
 
-import { useAuth } from "../hooks/useAuth";
+import {
+  useAuth,
+} from "../hooks/useAuth";
+
+import {
+  useCart,
+} from "../hooks/useCart";
 
 const Navbar = () => {
 
-  const { user, logout } = useAuth();
+  const {
+    user,
+    logout,
+  } = useAuth();
 
-  // Handle Logout
-  const handleLogout = () => {
+  const {
+    cartItems,
+  } = useCart();
 
-    logout();
-  };
+  // Total Cart Items
+  const cartCount =
+    cartItems.reduce(
+      (acc, item) =>
+        acc + item.qty,
+      0
+    );
 
   return (
 
-    <nav className="bg-black text-white shadow-md">
+    <header className="sticky top-0 z-50 bg-white shadow-md">
 
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6">
 
-        {/* Logo */}
-        <Link
-          to="/"
-          className="text-2xl font-bold tracking-wide"
-        >
-          STYLEFORGE
-        </Link>
+        <div className="flex items-center justify-between h-20">
 
-        {/* Menu */}
-        <div className="flex items-center gap-6 text-lg">
-
+          {/* Logo */}
           <Link
             to="/"
-            className="hover:text-gray-300 transition"
+            className="text-4xl font-black tracking-wide"
           >
-            Home
+
+            STYLEFORGE
+
           </Link>
 
-          <Link
-            to="/products"
-            className="hover:text-gray-300 transition"
-          >
-            Products
-          </Link>
+          {/* Navigation */}
+          <nav className="flex items-center gap-8">
 
-          <Link
-            to="/cart"
-            className="hover:text-gray-300 transition"
-          >
-            Cart
-          </Link>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-black font-bold"
+                  : "text-gray-600 hover:text-black transition"
+              }
+            >
+              Home
+            </NavLink>
 
-          {/* Logged In */}
-          {user ? (
+            <NavLink
+              to="/products"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-black font-bold"
+                  : "text-gray-600 hover:text-black transition"
+              }
+            >
+              Products
+            </NavLink>
 
-            <div className="flex items-center gap-4">
+            {/* Cart */}
+            <NavLink
+              to="/cart"
+              className="relative text-gray-600 hover:text-black transition"
+            >
 
-              {/* Admin Dashboard */}
-              {user.role === "admin" && (
+              Cart
 
-                <Link
-                  to="/admin"
-                  className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition"
-                >
-                  Dashboard
-                </Link>
+              {/* Badge */}
+              {cartCount > 0 && (
+
+                <span className="absolute -top-3 -right-5 bg-black text-white text-xs w-6 h-6 rounded-full flex items-center justify-center">
+
+                  {cartCount}
+
+                </span>
               )}
 
-              {/* User Name */}
-              <span className="font-semibold">
+            </NavLink>
 
-                {user.name}
+            {/* Admin */}
+            {user?.role === "admin" && (
 
-              </span>
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-black font-bold"
+                    : "text-gray-600 hover:text-black transition"
+                }
+              >
+                Admin
+              </NavLink>
+            )}
 
-              {/* Logout */}
+            {/* Dashboard */}
+            {user && (
+
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-black font-bold"
+                    : "text-gray-600 hover:text-black transition"
+                }
+              >
+                Dashboard
+              </NavLink>
+            )}
+
+            {/* Auth */}
+            {!user ? (
+
+              <>
+                <Link
+                  to="/login"
+                  className="border border-black px-5 py-2 rounded-xl hover:bg-black hover:text-white transition"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/register"
+                  className="bg-black text-white px-5 py-2 rounded-xl hover:bg-gray-800 transition"
+                >
+                  Register
+                </Link>
+              </>
+
+            ) : (
+
               <button
-                onClick={handleLogout}
-                className="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition"
+                onClick={logout}
+                className="bg-red-500 text-white px-5 py-2 rounded-xl hover:bg-red-600 transition"
               >
+
                 Logout
+
               </button>
+            )}
 
-            </div>
-
-          ) : (
-
-            <div className="flex items-center gap-4">
-
-              <Link
-                to="/login"
-                className="hover:text-gray-300 transition"
-              >
-                Login
-              </Link>
-
-              <Link
-                to="/register"
-                className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition"
-              >
-                Register
-              </Link>
-
-            </div>
-
-          )}
+          </nav>
 
         </div>
 
       </div>
 
-    </nav>
+    </header>
   );
 };
 

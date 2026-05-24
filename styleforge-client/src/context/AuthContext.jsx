@@ -6,11 +6,15 @@ const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(() => {
 
-    const storedUser = localStorage.getItem("user");
+    const storedUser =
+      localStorage.getItem("user");
 
-    return storedUser ? JSON.parse(storedUser) : null;
+    return storedUser
+      ? JSON.parse(storedUser)
+      : null;
   });
 
+  // Login
   const login = (userData) => {
 
     setUser(userData);
@@ -21,6 +25,7 @@ const AuthProvider = ({ children }) => {
     );
   };
 
+  // Logout
   const logout = () => {
 
     setUser(null);
@@ -29,6 +34,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
+
     <AuthContext.Provider
       value={{
         user,

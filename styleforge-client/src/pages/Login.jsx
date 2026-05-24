@@ -1,5 +1,11 @@
+import { useState } from "react";
+
 import MainLayout from "../layouts/MainLayout";
+
 import { Link, useNavigate } from "react-router-dom";
+
+import API from "../services/api";
+
 import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
@@ -8,30 +14,79 @@ const Login = () => {
 
   const { login } = useAuth();
 
-  const handleLogin = (e) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [error, setError] =
+    useState("");
+
+  // Handle Input
+  const handleChange = (e) => {
+
+    setFormData({
+      ...formData,
+      [e.target.name]:
+        e.target.value,
+    });
+  };
+
+  // Handle Login
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-    // Temporary fake admin login
-    const fakeUser = {
-      name: "Admin User",
-      email: "admin@gmail.com",
-      role: "admin",
-    };
+    try {
 
-    login(fakeUser);
+      setLoading(true);
 
-    navigate("/admin");
+      setError("");
+
+      const { data } =
+        await API.post(
+          "/auth/login",
+          formData
+        );
+
+      // Save User
+      login(data);
+
+      // Redirect
+      if (data.role === "admin") {
+
+        navigate("/admin");
+
+      } else {
+
+        navigate("/");
+      }
+
+    } catch (error) {
+
+      setError(
+        error.response?.data?.message ||
+        "Login failed"
+      );
+
+    } finally {
+
+      setLoading(false);
+    }
   };
 
   return (
+
     <MainLayout>
 
       <div className="min-h-[90vh] flex items-center justify-center bg-gray-100 px-6">
 
         <div className="bg-white shadow-2xl rounded-2xl overflow-hidden grid md:grid-cols-2 max-w-5xl w-full">
 
-          {/* Left Side Image */}
+          {/* Left Image */}
           <div className="hidden md:block">
 
             <img
@@ -42,7 +97,7 @@ const Login = () => {
 
           </div>
 
-          {/* Right Side Form */}
+          {/* Right Form */}
           <div className="p-10">
 
             <h2 className="text-4xl font-bold mb-3">
@@ -53,8 +108,18 @@ const Login = () => {
               Login to your STYLEFORGE account
             </p>
 
+            {/* Error */}
+            {error && (
+
+              <div className="bg-red-100 text-red-600 p-3 rounded-lg mb-4">
+
+                {error}
+
+              </div>
+            )}
+
             <form
-              onSubmit={handleLogin}
+              onSubmit={handleSubmit}
               className="space-y-6"
             >
 
@@ -66,6 +131,9 @@ const Login = () => {
 
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Enter your email"
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-black"
                 />
@@ -80,6 +148,9 @@ const Login = () => {
 
                 <input
                   type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="Enter your password"
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-black"
                 />
@@ -88,9 +159,14 @@ const Login = () => {
 
               <button
                 type="submit"
+                disabled={loading}
                 className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
               >
-                Login
+
+                {loading
+                  ? "Loading..."
+                  : "Login"}
+
               </button>
 
             </form>

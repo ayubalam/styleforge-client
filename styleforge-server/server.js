@@ -22,6 +22,9 @@ import uploadRoutes
 import orderRoutes
   from "./routes/orderRoutes.js";
 
+  import paymentRoutes
+  from "./routes/paymentRoutes.js";
+
 dotenv.config();
 
 const app = express();
@@ -56,6 +59,11 @@ app.use(
 app.use(
   "/api/orders",
   orderRoutes
+);
+
+app.use(
+  "/api/payment",
+  paymentRoutes
 );
 
 

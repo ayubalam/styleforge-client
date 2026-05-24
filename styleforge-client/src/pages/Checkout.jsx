@@ -59,35 +59,83 @@ const Checkout = () => {
 
   // Place Order
   const handleSubmit =
-    async (e) => {
+  async (e) => {
 
-      e.preventDefault();
+    e.preventDefault();
 
-      try {
+    try {
 
+      // Create Razorpay Order
+      const { data } =
         await API.post(
-          "/orders",
+          "/payment/create-order",
           {
-            orderItems:
-              cartItems,
-
-            shippingAddress,
-
-            totalPrice,
+            amount:
+              totalPrice,
           }
         );
 
-        clearCart();
+      const options = {
 
-        navigate(
-          "/dashboard"
+        key:
+          "YOUR_RAZORPAY_KEY_ID",
+
+        amount:
+          data.amount,
+
+        currency:
+          data.currency,
+
+        name:
+          "STYLEFORGE",
+
+        description:
+          "Order Payment",
+
+        order_id:
+          data.id,
+
+        handler:
+          async function () {
+
+            // Save Order
+            await API.post(
+              "/orders",
+              {
+                orderItems:
+                  cartItems,
+
+                shippingAddress,
+
+                totalPrice,
+              }
+            );
+
+            clearCart();
+
+            navigate(
+              "/dashboard"
+            );
+          },
+
+        theme: {
+          color:
+            "#000000",
+        },
+      };
+
+      const razor =
+        new window.Razorpay(
+          options
         );
 
-      } catch (error) {
+      razor.open();
 
-        console.log(error);
-      }
-    };
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
 
   return (
 

@@ -1,12 +1,26 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
+import express
+  from "express";
 
-import connectDB from "./config/db.js";
+import dotenv
+  from "dotenv";
 
-import authRoutes from "./routes/authRoutes.js";
+import cors
+  from "cors";
 
-import productRoutes from "./routes/productRoutes.js";
+import connectDB
+  from "./config/db.js";
+
+import authRoutes
+  from "./routes/authRoutes.js";
+
+import productRoutes
+  from "./routes/productRoutes.js";
+
+import uploadRoutes
+  from "./routes/uploadRoutes.js";
+
+import orderRoutes
+  from "./routes/orderRoutes.js";
 
 dotenv.config();
 
@@ -34,12 +48,23 @@ app.use(
   productRoutes
 );
 
+app.use(
+  "/api/upload",
+  uploadRoutes
+);
+
+app.use(
+  "/api/orders",
+  orderRoutes
+);
+
 
 // Test Route
 app.get("/", (req, res) => {
 
   res.json({
-    message: "STYLEFORGE API Running",
+    message:
+      "STYLEFORGE API Running",
   });
 });
 
